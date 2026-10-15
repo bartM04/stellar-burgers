@@ -1,5 +1,7 @@
 import { OrderCard } from '@components';
+
 import type { OrdersListUIProps } from './type';
+
 import styles from './orders-list.module.css';
 
 export const OrdersListUI = ({

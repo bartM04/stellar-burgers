@@ -1,5 +1,6 @@
 import { IngredientsCategoryUI } from '@ui';
 import { useMemo } from 'react';
+
 import { useSelector } from '../../services/store';
 
 import type { TIngredientsCategoryProps } from './type';

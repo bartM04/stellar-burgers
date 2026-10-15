@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 import {
   registerUserApi,
   loginUserApi,
@@ -9,6 +10,7 @@ import {
   resetPasswordApi,
 } from '../../utils/burger-api';
 import { setCookie, deleteCookie } from '../../utils/cookie';
+
 import type { TUser } from '@utils-types';
 
 type TUserState = {
@@ -58,15 +60,9 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-export const forgotPassword = createAsyncThunk(
-  'user/forgotPassword',
-  forgotPasswordApi
-);
+export const forgotPassword = createAsyncThunk('user/forgotPassword', forgotPasswordApi);
 
-export const resetPassword = createAsyncThunk(
-  'user/resetPassword',
-  resetPasswordApi
-);
+export const resetPassword = createAsyncThunk('user/resetPassword', resetPasswordApi);
 
 export const logoutUser = createAsyncThunk('user/logout', async () => {
   await logoutApi();
@@ -98,7 +94,7 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка входа';
+        state.error = action.error.message ?? 'Ошибка входа';
       })
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
@@ -111,7 +107,7 @@ export const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка регистрации';
+        state.error = action.error.message ?? 'Ошибка регистрации';
       })
       .addCase(getUser.pending, (state) => {
         state.isAuthChecked = false;
@@ -134,7 +130,7 @@ export const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка обновления профиля';
+        state.error = action.error.message ?? 'Ошибка обновления профиля';
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isAuthChecked = true;
@@ -144,13 +140,13 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
-        state.error = action.error.message || 'Ошибка';
+        state.error = action.error.message ?? 'Ошибка';
       })
       .addCase(resetPassword.fulfilled, (state) => {
         state.error = null;
       })
       .addCase(resetPassword.rejected, (state, action) => {
-        state.error = action.error.message || 'Ошибка';
+        state.error = action.error.message ?? 'Ошибка';
       });
   },
 });

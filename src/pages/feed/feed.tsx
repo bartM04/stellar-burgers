@@ -1,9 +1,10 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
-import { fetchFeed } from '../../services/slices/feedSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
+
+import { fetchFeed } from '../../services/slices/feedSlice';
+import { useDispatch, useSelector } from '../../services/store';
 
 export const Feed = (): React.JSX.Element => {
   const dispatch = useDispatch();
@@ -12,11 +13,11 @@ export const Feed = (): React.JSX.Element => {
   const { orders, isLoading } = useSelector((state) => state.feed);
 
   useEffect(() => {
-    dispatch(fetchFeed());
+    void dispatch(fetchFeed());
   }, [dispatch]);
 
   const handleGetFeeds = (): void => {
-    dispatch(fetchFeed());
+    void dispatch(fetchFeed());
   };
 
   const handleOrderClick = (orderNumber: number): void => {

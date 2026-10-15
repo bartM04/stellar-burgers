@@ -1,6 +1,7 @@
 import { OrderCardUI } from '@ui';
 import { memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+
 import { useSelector } from '../../services/store';
 
 import type { OrderCardProps } from './type';
@@ -17,7 +18,7 @@ export const OrderCard = memo(function OrderCard({
   const ingredients = useSelector((state) => state.ingredients.ingredients);
 
   const orderInfo = useMemo(() => {
-    if (!ingredients || !ingredients.length) return null;
+    if (!ingredients?.length) return null;
 
     const ingredientsInfo = order.ingredients.reduce(
       (acc: TIngredient[], item: string) => {

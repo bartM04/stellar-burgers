@@ -1,7 +1,8 @@
 import { ProfileMenuUI } from '@ui';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from '../../services/store';
+
 import { logoutUser } from '../../services/slices/userSlice';
+import { useDispatch } from '../../services/store';
 
 export const ProfileMenu = (): React.JSX.Element => {
   const { pathname } = useLocation();
@@ -9,8 +10,9 @@ export const ProfileMenu = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   const handleLogout = (): void => {
-    dispatch(logoutUser());
-    navigate('/');
+    void dispatch(logoutUser())
+      .then(() => navigate('/login'))
+      .catch(() => navigate('/login'));
   };
 
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;

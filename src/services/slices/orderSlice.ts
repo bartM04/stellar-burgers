@@ -1,16 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { TOrder } from '@utils-types';
 
 import { orderBurgerApi } from '../../utils/burger-api';
+
+import type { TOrder } from '@utils-types';
 
 type TOrderState = {
   orderRequest: boolean;
   orderModalData: TOrder | null;
+  error: string | null;
 };
 
 const initialState: TOrderState = {
   orderRequest: false,
   orderModalData: null,
+  error: null,
 };
 
 export const createOrder = createAsyncThunk(
@@ -34,14 +37,16 @@ export const orderSlice = createSlice({
       .addCase(createOrder.pending, (state) => {
         state.orderRequest = true;
         state.orderModalData = null;
+        state.error = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.orderRequest = false;
         state.orderModalData = action.payload;
+        state.error = null;
       })
-      .addCase(createOrder.rejected, (state) => {
+      .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;
-        console.error('Ошибка при создании заказа');
+        state.error = action.error.message ?? 'Ошибка при создании заказа';
       });
   },
 });

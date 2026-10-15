@@ -1,12 +1,14 @@
 import { RegisterUI } from '@ui-pages';
 import { type SyntheticEvent, useState } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
+
+import { selectUserIsLoading, selectUserError } from '../../services/selectors';
 import { registerUser, clearError } from '../../services/slices/userSlice';
-import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
 
 export const Register = (): React.JSX.Element => {
   const dispatch = useDispatch();
-  const { user, isLoading, error } = useSelector((state) => state.user);
+  const isLoading = useSelector(selectUserIsLoading);
+  const error = useSelector(selectUserError);
 
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -15,16 +17,12 @@ export const Register = (): React.JSX.Element => {
   const handleSubmit = (e: SyntheticEvent): void => {
     e.preventDefault();
     dispatch(clearError());
-    dispatch(registerUser({ email, name: userName, password }));
+    void dispatch(registerUser({ email, name: userName, password }));
   };
-
-  if (user) {
-    return <Navigate to="/profile" replace />;
-  }
 
   return (
     <RegisterUI
-      errorText={error || undefined}
+      errorText={error ?? undefined}
       email={email}
       userName={userName}
       password={password}

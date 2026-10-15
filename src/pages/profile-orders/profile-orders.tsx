@@ -1,8 +1,9 @@
 import { ProfileOrdersUI } from '@ui-pages';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
-import { fetchOrders } from '../../services/slices/ordersSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
+
+import { fetchOrders } from '../../services/slices/ordersSlice';
+import { useDispatch, useSelector } from '../../services/store';
 
 export const ProfileOrders = (): React.JSX.Element => {
   const dispatch = useDispatch();
@@ -11,7 +12,7 @@ export const ProfileOrders = (): React.JSX.Element => {
   const { orders, isLoading } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    dispatch(fetchOrders());
+    void dispatch(fetchOrders());
   }, [dispatch]);
 
   const handleOrderClick = (orderNumber: number): void => {

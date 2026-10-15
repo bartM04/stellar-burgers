@@ -1,5 +1,5 @@
-import { Preloader } from '@ui';
 import { ProfileMenu, OrdersList } from '@components';
+import { Preloader } from '@ui';
 
 import type { ProfileOrdersUIProps } from './type';
 

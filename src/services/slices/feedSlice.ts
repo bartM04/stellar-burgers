@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { getFeedsApi } from '../../utils/burger-api';
+
 import type { TOrder } from '@utils-types';
 
 type TFeedState = {
@@ -38,7 +40,7 @@ export const feedSlice = createSlice({
       })
       .addCase(fetchFeed.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки ленты';
+        state.error = action.error.message ?? 'Ошибка загрузки ленты';
       });
   },
 });

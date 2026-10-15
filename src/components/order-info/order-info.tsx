@@ -1,41 +1,41 @@
 import { Preloader, OrderInfoUI } from '@ui';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from '../../services/store';
-import { getOrderByNumberApi } from '../../utils/burger-api';
-import type { TIngredient, TOrder } from '@utils-types';
+
+import { fetchOrderDetails } from '../../services/slices/orderDetailsSlice';
+import { useSelector, useDispatch } from '../../services/store';
+
+import type { TIngredient } from '@utils-types';
 
 export const OrderInfo = (): React.JSX.Element => {
   const { number } = useParams<{ number: string }>();
+  const dispatch = useDispatch();
 
   const ingredients = useSelector((state) => state.ingredients.ingredients);
 
-  const [orderData, setOrderData] = useState<TOrder | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const orderData = useSelector((state) => state.orderDetails.order);
+  const isLoading = useSelector((state) => state.orderDetails.isLoading);
+
+  const feedOrders = useSelector((state) => state.feed.orders);
+  const userOrders = useSelector((state) => state.orders.orders);
 
   useEffect(() => {
-    if (!number) {
-      setIsLoading(false);
+    if (!number) return;
+
+    const orderNumber = Number(number);
+
+    const foundInFeed = feedOrders.find((order) => order.number === orderNumber);
+    const foundInUserOrders = userOrders.find((order) => order.number === orderNumber);
+
+    if (foundInFeed || foundInUserOrders) {
       return;
     }
 
-    setIsLoading(true);
-    getOrderByNumberApi(Number(number))
-      .then((response) => {
-        if (response.orders && response.orders.length > 0) {
-          setOrderData(response.orders[0]);
-        }
-      })
-      .catch((err) => {
-        console.error('Ошибка загрузки заказа:', err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [number]);
+    void dispatch(fetchOrderDetails(orderNumber));
+  }, [dispatch, number, feedOrders, userOrders]);
 
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients || !ingredients.length) return null;
+    if (!orderData || !ingredients?.length) return null;
 
     const date = new Date(orderData.createdAt);
 

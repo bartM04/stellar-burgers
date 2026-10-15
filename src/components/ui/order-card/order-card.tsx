@@ -28,10 +28,10 @@ export const OrderCardUI = memo(function OrderCardUI({
       style={
         isNew
           ? {
-            boxShadow: '0 0 30px rgba(73, 78, 230, 1)',
-            border: '2px solid #494ee6',
-            transition: 'all 0.3s ease',
-          }
+              boxShadow: '0 0 30px rgba(73, 78, 230, 1)',
+              border: '2px solid #494ee6',
+              transition: 'all 0.3s ease',
+            }
           : {}
       }
     >

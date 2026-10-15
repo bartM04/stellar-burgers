@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { getOrderByNumberApi } from '../../utils/burger-api';
+
 import type { TOrder } from '@utils-types';
 
 type TOrderDetailsState = {
@@ -43,7 +45,7 @@ export const orderDetailsSlice = createSlice({
       })
       .addCase(fetchOrderDetails.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки заказа';
+        state.error = action.error.message ?? 'Ошибка загрузки заказа';
       });
   },
 });
