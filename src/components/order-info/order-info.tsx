@@ -1,25 +1,41 @@
 import { Preloader, OrderInfoUI } from '@ui';
-import { useMemo } from 'react';
-
-import type { TIngredient } from '@utils-types';
+import { useMemo, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from '../../services/store';
+import { getOrderByNumberApi } from '../../utils/burger-api';
+import type { TIngredient, TOrder } from '@utils-types';
 
 export const OrderInfo = (): React.JSX.Element => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0,
-  };
+  const { number } = useParams<{ number: string }>();
 
-  const ingredients: TIngredient[] = [];
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
 
-  /* Готовим данные для отображения */
+  const [orderData, setOrderData] = useState<TOrder | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!number) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    getOrderByNumberApi(Number(number))
+      .then((response) => {
+        if (response.orders && response.orders.length > 0) {
+          setOrderData(response.orders[0]);
+        }
+      })
+      .catch((err) => {
+        console.error('Ошибка загрузки заказа:', err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [number]);
+
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients.length) return null;
+    if (!orderData || !ingredients || !ingredients.length) return null;
 
     const date = new Date(orderData.createdAt);
 
@@ -57,7 +73,7 @@ export const OrderInfo = (): React.JSX.Element => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading || !orderInfo) {
     return <Preloader />;
   }
 

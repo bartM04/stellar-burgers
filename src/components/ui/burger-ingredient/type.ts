@@ -3,7 +3,7 @@ import type { Location } from 'react-router-dom';
 
 export type TBurgerIngredientUIProps = {
   ingredient: TIngredient;
-  count: number;
+  count?: number;
   locationState: { background: Location };
   handleAdd: () => void;
 };

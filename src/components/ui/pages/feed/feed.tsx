@@ -9,6 +9,7 @@ import styles from './feed.module.css';
 export const FeedUI = memo(function FeedUI({
   orders,
   handleGetFeeds,
+  onOrderClick,
 }: FeedUIProps): React.JSX.Element {
   return (
     <main className={styles.containerMain}>
@@ -18,7 +19,7 @@ export const FeedUI = memo(function FeedUI({
       </div>
       <div className={styles.main}>
         <div className={styles.columnOrders}>
-          <OrdersList orders={orders} />
+          <OrdersList orders={orders} onOrderClick={onOrderClick} />
         </div>
         <div className={styles.columnInfo}>
           <FeedInfo />

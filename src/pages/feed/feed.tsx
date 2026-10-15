@@ -1,19 +1,39 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-
-import type { TOrder } from '@utils-types';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchFeed } from '../../services/slices/feedSlice';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const Feed = (): React.JSX.Element => {
-  // TODO: Взять переменную из стора
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { orders, isLoading } = useSelector((state) => state.feed);
+
+  useEffect(() => {
+    dispatch(fetchFeed());
+  }, [dispatch]);
 
   const handleGetFeeds = (): void => {
-    // TODO: Запросить ленту заказов
+    dispatch(fetchFeed());
   };
 
-  if (!orders.length) {
+  const handleOrderClick = (orderNumber: number): void => {
+    navigate(`/feed/${orderNumber}`, {
+      state: { background: location },
+    });
+  };
+
+  if (isLoading) {
     return <Preloader />;
   }
 
-  return <FeedUI orders={orders} handleGetFeeds={handleGetFeeds} />;
+  return (
+    <FeedUI
+      orders={orders}
+      handleGetFeeds={handleGetFeeds}
+      onOrderClick={handleOrderClick}
+    />
+  );
 };

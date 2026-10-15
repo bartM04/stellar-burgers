@@ -8,10 +8,12 @@ import styles from './profile.module.css';
 export const ProfileUI = ({
   formValue,
   isFormChanged,
+  editingField,
   updateUserError,
   handleSubmit,
   handleCancel,
   handleInputChange,
+  onEditClick,
 }: ProfileUIProps): React.JSX.Element => (
   <main className={styles.container}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
@@ -30,6 +32,8 @@ export const ProfileUI = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={editingField !== 'name'}
+            onIconClick={() => onEditClick('name')}
           />
         </div>
         <div className="pb-6">
@@ -43,6 +47,8 @@ export const ProfileUI = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={editingField !== 'email'}
+            onIconClick={() => onEditClick('email')}
           />
         </div>
         <div className="pb-6">
@@ -56,6 +62,8 @@ export const ProfileUI = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={editingField !== 'password'}
+            onIconClick={() => onEditClick('password')}
           />
         </div>
         {isFormChanged && (

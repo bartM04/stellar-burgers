@@ -1,10 +1,30 @@
 import { ProfileOrdersUI } from '@ui-pages';
-
-import type { TOrder } from '@utils-types';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchOrders } from '../../services/slices/ordersSlice';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const ProfileOrders = (): React.JSX.Element => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { orders, isLoading } = useSelector((state) => state.orders);
 
-  return <ProfileOrdersUI orders={orders} />;
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  const handleOrderClick = (orderNumber: number): void => {
+    navigate(`/profile/orders/${orderNumber}`, {
+      state: { background: location },
+    });
+  };
+
+  return (
+    <ProfileOrdersUI
+      orders={orders}
+      isLoading={isLoading}
+      onOrderClick={handleOrderClick}
+    />
+  );
 };
