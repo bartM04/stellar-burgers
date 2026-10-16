@@ -25,18 +25,24 @@ export const OrdersList = memo(function OrdersList({
       (num) => !prevOrderNumbersRef.current.has(num)
     );
 
+    let timeout: ReturnType<typeof setTimeout>;
+
     if (newNumbers.length > 0) {
       setNewOrderNumbers(newNumbers);
       prevOrderNumbersRef.current = currentSet;
 
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         setNewOrderNumbers([]);
       }, 5000);
-
-      return () => clearTimeout(timeout);
     } else {
       prevOrderNumbersRef.current = currentSet;
     }
+
+    const cleanup = (): void => {
+      clearTimeout(timeout);
+    };
+
+    return cleanup;
   }, [orders]);
 
   const orderByDate = [...orders].sort(

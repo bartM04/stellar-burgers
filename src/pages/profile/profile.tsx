@@ -46,7 +46,9 @@ export const Profile = (): React.JSX.Element => {
         .then(() => {
           setFormValue((prev) => ({ ...prev, password: '' }));
         })
-        .catch(() => {});
+        .catch((error) => {
+          console.error('Ошибка обновления профиля:', error);
+        });
     }
   };
 

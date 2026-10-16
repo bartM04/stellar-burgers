@@ -18,7 +18,7 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
 
   const onOrderClick = (): void => {
     if (!user) {
-      navigate('/login', { state: { from: location } });
+      void navigate('/login', { state: { from: location } });
       return;
     }
 

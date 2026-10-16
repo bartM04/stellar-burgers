@@ -21,7 +21,7 @@ export const Feed = (): React.JSX.Element => {
   };
 
   const handleOrderClick = (orderNumber: number): void => {
-    navigate(`/feed/${orderNumber}`, {
+    void navigate(`/feed/${orderNumber}`, {
       state: { background: location },
     });
   };

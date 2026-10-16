@@ -16,7 +16,7 @@ export const ProfileOrders = (): React.JSX.Element => {
   }, [dispatch]);
 
   const handleOrderClick = (orderNumber: number): void => {
-    navigate(`/profile/orders/${orderNumber}`, {
+    void navigate(`/profile/orders/${orderNumber}`, {
       state: { background: location },
     });
   };
