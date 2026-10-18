@@ -18,6 +18,7 @@ export const BurgerConstructorUI = ({
   orderModalData,
   onOrderClick,
   closeOrderModal,
+  error,
 }: BurgerConstructorUIProps): React.JSX.Element => (
   <section className={styles.burger_constructor}>
     {constructorItems.bun ? (
@@ -81,6 +82,8 @@ export const BurgerConstructorUI = ({
         Оформить заказ
       </Button>
     </div>
+
+    {error && <p className="text text_type_main-default text_color_red mt-4">{error}</p>}
 
     {orderRequest && (
       <Modal onClose={closeOrderModal} title={'Оформляем заказ...'}>

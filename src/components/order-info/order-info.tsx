@@ -1,31 +1,53 @@
 import { Preloader, OrderInfoUI } from '@ui';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { fetchOrderDetails } from '../../services/slices/orderDetailsSlice';
+import { useSelector, useDispatch } from '../../services/store';
 
 import type { TIngredient } from '@utils-types';
 
 export const OrderInfo = (): React.JSX.Element => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0,
-  };
+  const { number } = useParams<{ number: string }>();
+  const dispatch = useDispatch();
 
-  const ingredients: TIngredient[] = [];
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
 
-  /* Готовим данные для отображения */
+  const orderData = useSelector((state) => state.orderDetails.order);
+  const isLoading = useSelector((state) => state.orderDetails.isLoading);
+
+  const feedOrders = useSelector((state) => state.feed.orders);
+  const userOrders = useSelector((state) => state.orders.orders);
+
+  useEffect(() => {
+    if (!number) return;
+
+    const orderNumber = Number(number);
+
+    const foundInFeed = feedOrders.find((order) => order.number === orderNumber);
+    const foundInUserOrders = userOrders.find((order) => order.number === orderNumber);
+
+    if (!orderData && !foundInFeed && !foundInUserOrders) {
+      void dispatch(fetchOrderDetails(orderNumber));
+    }
+  }, [dispatch, number, orderData, feedOrders, userOrders]);
+
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients.length) return null;
+    const orderNumber = number ? Number(number) : null;
 
-    const date = new Date(orderData.createdAt);
+    const targetOrder = orderNumber
+      ? (feedOrders.find((order) => order.number === orderNumber) ??
+        userOrders.find((order) => order.number === orderNumber) ??
+        orderData)
+      : orderData;
+
+    if (!targetOrder || !ingredients?.length) return null;
+
+    const date = new Date(targetOrder.createdAt);
 
     type TIngredientsWithCount = Record<string, TIngredient & { count: number }>;
 
-    const ingredientsInfo = orderData.ingredients.reduce(
+    const ingredientsInfo = targetOrder.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
@@ -50,14 +72,14 @@ export const OrderInfo = (): React.JSX.Element => {
     );
 
     return {
-      ...orderData,
+      ...targetOrder,
       ingredientsInfo,
       date,
       total,
     };
-  }, [orderData, ingredients]);
+  }, [orderData, ingredients, number, feedOrders, userOrders]);
 
-  if (!orderInfo) {
+  if (isLoading || !orderInfo) {
     return <Preloader />;
   }
 
