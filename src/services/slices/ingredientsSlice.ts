@@ -4,7 +4,7 @@ import { getIngredientsApi } from '../../utils/burger-api';
 
 import type { TIngredient } from '@utils-types';
 
-type TIngredientsState = {
+export type TIngredientsState = {
   ingredients: TIngredient[];
   isLoading: boolean;
   error: string | null;
